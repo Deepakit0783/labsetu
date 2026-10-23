@@ -1,2 +1,2 @@
-# labseu
+# labseutu
 labseu information
