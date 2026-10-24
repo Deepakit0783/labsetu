@@ -17,17 +17,15 @@ const agentRoutes = require("./routes/agentRoutes");
 const errorMiddleware = require("./middleware/errorMiddleware");
 
 const app = express();
-
 app.use(
   cors({
     origin: [
-      process.env.CLIENT_URL || "http://localhost:5173",
-      process.env.FRONTEND_URL || "http://localhost:5173",
+      "http://localhost:5173",
+      "https://labsetu-taupe.vercel.app",
     ],
     credentials: true,
   })
 );
-
 app.use(express.json({ limit: "1mb" }));
 
 // Database connection ko har request se pehle ensure karein
