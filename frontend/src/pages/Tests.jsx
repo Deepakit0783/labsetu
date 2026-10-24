@@ -12,7 +12,9 @@ const categories = [
   "Health Packages",
 ];
 
-const API_URL = "http://localhost:5000/api/tests";
+const API_URL = `${
+  import.meta.env.VITE_API_URL || "https://labsetu.onrender.com/api"
+}/tests`;
 
 export default function Tests() {
   const [search, setSearch] = useState("");
