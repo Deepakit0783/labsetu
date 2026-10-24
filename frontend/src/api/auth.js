@@ -1,5 +1,6 @@
-const API_URL =
-  `${import.meta.env.VITE_API_URL || "https://labsetu.onrender.com/api"}/auth`;
+const API_URL = `${
+  import.meta.env.VITE_API_URL || "http://localhost:5000/api"
+}/auth`;
 
 async function sendAuthRequest(endpoint, userData) {
   const response = await fetch(`${API_URL}/${endpoint}`, {
@@ -7,6 +8,7 @@ async function sendAuthRequest(endpoint, userData) {
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
     body: JSON.stringify(userData),
   });
 
