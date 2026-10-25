@@ -20,13 +20,13 @@ const app = express();
 
 // Allowed frontend domains
 const allowedOrigins = [
-  process.env.CLIENT_URL,
-  process.env.FRONTEND_URL,
   "https://labsetu-taupe.vercel.app",
   "https://labsetu.vercel.app",
+  process.env.CLIENT_URL,
+  process.env.FRONTEND_URL,
 ].filter(Boolean);
 
-// CORS configuration
+// CORS must come before routes
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -34,6 +34,7 @@ app.use(
         return callback(null, true);
       }
 
+      console.error("Blocked CORS origin:", origin);
       return callback(new Error("Not allowed by CORS"));
     },
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
@@ -41,10 +42,10 @@ app.use(
   })
 );
 
-// Parse JSON request bodies
+// Parse JSON
 app.use(express.json({ limit: "1mb" }));
 
-// Database connection
+// Connect to MongoDB
 app.use(async (req, res, next) => {
   try {
     await connectDB();
@@ -76,13 +77,13 @@ app.use("/api/reports", reportRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/agent", agentRoutes);
 
-// Error handling middleware (must be last)
+// Error middleware must be last
 app.use(errorMiddleware);
 
 // Export app
 module.exports = app;
 
-// Render / local server deployment
+// Start server on Render or locally
 if (require.main === module) {
   const PORT = process.env.PORT || 5000;
 
