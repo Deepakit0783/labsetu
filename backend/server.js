@@ -26,7 +26,7 @@ const allowedOrigins = [
   process.env.FRONTEND_URL,
 ].filter(Boolean);
 
-// CORS must come before routes
+// CORS must be before routes and other middleware
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -42,7 +42,7 @@ app.use(
   })
 );
 
-// Parse JSON
+// Parse JSON request bodies
 app.use(express.json({ limit: "1mb" }));
 
 // Connect to MongoDB
