@@ -1,3 +1,4 @@
+
 require("dotenv").config();
 
 const express = require("express");
@@ -17,20 +18,28 @@ const errorMiddleware = require("./middleware/errorMiddleware");
 
 const app = express();
 
-// CORS configuration
+// Allowed frontend domains
 const allowedOrigins = [
-  process.env.CLIENT_URL || "https://labsetu.vercel.app",
-  process.env.FRONTEND_URL || "https://labsetu.vercel.app",
-];
+  process.env.CLIENT_URL,
+  process.env.FRONTEND_URL,
+  "https://labsetu-taupe.vercel.app",
+  "https://labsetu.vercel.app",
+].filter(Boolean);
 
-app.use(cors({
-  origin: "https://labsetu.vercel.app",
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
+// CORS configuration
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
 
-// Keep this after CORS
-app.use("/api", apiRoutes);
+      return callback(new Error("Not allowed by CORS"));
+    },
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 // Parse JSON request bodies
 app.use(express.json({ limit: "1mb" }));
@@ -70,7 +79,7 @@ app.use("/api/agent", agentRoutes);
 // Error handling middleware (must be last)
 app.use(errorMiddleware);
 
-// Vercel serverless deployment
+// Export app
 module.exports = app;
 
 // Render / local server deployment
